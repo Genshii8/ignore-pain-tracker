@@ -16,6 +16,10 @@ function()
         IPCap = math.floor(castIP * 1.295)
     end
     
+    if IPCap - currentIP == -1 or IPCap - currentIP == -2 then
+        IPCap = currentIP
+    end
+    
     local percentOfCap = currentIP / IPCap * 100
     percentOfCap = aura_env.shortenPercent(percentOfCap)
     

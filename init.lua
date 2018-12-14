@@ -1,4 +1,4 @@
--- by Marok (v2.11)
+-- by Marok (v2.12)
 
 local numberOfDecimalPlaces = false
 if aura_env.config.numberOfDecimalPlaces == 2 then
@@ -30,10 +30,12 @@ aura_env.shortenNumber = function(number)
     
     local shortenedNumber = number
     
+    local wasNegative = false
     if number < 0 then
         number = number * -1
+        wasNegative = true
     end
-
+    
     local suffix = ""
     if number >= 1000000 then
         shortenedNumber = shortenedNumber / 1000000
@@ -45,22 +47,25 @@ aura_env.shortenNumber = function(number)
     
     if not numberOfDecimalPlaces then
         
-        if number >= 100000000 or number >= 100000 then
+        if number >= 100000 then
             shortenedNumber = string.format("%.0f", shortenedNumber)
-        elseif number >= 10000000 or number >= 10000 then
+        elseif number >= 10000 then
             shortenedNumber = string.format("%.1f", shortenedNumber)
-        elseif number >= 1000000 or number >= 1000 then
+        elseif number >= 1000 then
             shortenedNumber = string.format("%.2f", shortenedNumber)
         end
         
     else
-
+        
         if number >= 1000 then
             shortenedNumber = string.format("%."..numberOfDecimalPlaces.."f", shortenedNumber)
         end
     end
     
-    if aura_env.config.dontShortenThousands and (number >= 1000 and number < 10000) then    
+    if aura_env.config.dontShortenThousands and (number >= 1000 and number < 10000) then
+        if wasNegative then
+           number = number * -1 
+        end
         return number
     else
         return shortenedNumber..suffix
@@ -83,7 +88,7 @@ end
 -- Thank you to Buds on wago for this function.
 
 aura_env.countAzeriteTrait = function(spellId)
-
+    
     local count = 0
     local azeriteItemLocation = C_AzeriteItem.FindActiveAzeriteItem()
     if (not azeriteItemLocation) then return 0 end
