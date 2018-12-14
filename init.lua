@@ -1,4 +1,4 @@
--- by Marok (v2.10)
+-- by Marok (v2.11)
 
 local numberOfDecimalPlaces = false
 if aura_env.config.numberOfDecimalPlaces == 2 then
@@ -26,15 +26,14 @@ aura_env.setVisuals = function(r,g,b,a, glow)
     region:SetGlow(glow)
 end
 
-local round = function(num, numDecimalPlaces)
-    local mult = 10^(numDecimalPlaces or 0)
-    return math.floor(num * mult + 0.5) / mult
-end
-
 aura_env.shortenNumber = function(number)
     
     local shortenedNumber = number
     
+    if number < 0 then
+        number = number * -1
+    end
+
     local suffix = ""
     if number >= 1000000 then
         shortenedNumber = shortenedNumber / 1000000
@@ -46,74 +45,18 @@ aura_env.shortenNumber = function(number)
     
     if not numberOfDecimalPlaces then
         
-        if number >= 100000000 then
-            shortenedNumber = round(shortenedNumber, 0)
-            
-        elseif number >= 10000000 then
-            shortenedNumber = round(shortenedNumber, 1)
-            
-            if shortenedNumber == math.floor(shortenedNumber) then
-                shortenedNumber = shortenedNumber..".0"
-            end
-            
-        elseif number >= 1000000 then
-            shortenedNumber = round(shortenedNumber, 2)
-            
-            if shortenedNumber == math.floor(shortenedNumber) then
-                shortenedNumber = shortenedNumber..".00"
-            elseif shortenedNumber == round(shortenedNumber, 1) then
-                shortenedNumber = shortenedNumber.."0"
-            end
-            
-        elseif number >= 100000 then
-            shortenedNumber = round(shortenedNumber, 0)
-            
-        elseif number >= 10000 then
-            shortenedNumber = round(shortenedNumber, 1)
-            
-            if shortenedNumber == math.floor(shortenedNumber) then
-                shortenedNumber = shortenedNumber..".0"
-            end
-            
-        elseif number >= 1000 then
-            shortenedNumber = round(shortenedNumber, 2)
-            
-            if shortenedNumber == math.floor(shortenedNumber) then
-                shortenedNumber = shortenedNumber..".00"
-            elseif shortenedNumber == round(shortenedNumber, 1) then
-                shortenedNumber = shortenedNumber.."0"
-            end
+        if number >= 100000000 or number >= 100000 then
+            shortenedNumber = string.format("%.0f", shortenedNumber)
+        elseif number >= 10000000 or number >= 10000 then
+            shortenedNumber = string.format("%.1f", shortenedNumber)
+        elseif number >= 1000000 or number >= 1000 then
+            shortenedNumber = string.format("%.2f", shortenedNumber)
         end
         
     else
-        
+
         if number >= 1000 then
-            
-            shortenedNumber = round(shortenedNumber, numberOfDecimalPlaces)
-            
-            if numberOfDecimalPlaces > 0 then
-                
-                if shortenedNumber == math.floor(shortenedNumber) then
-                    
-                    local zeroSuffix = "."
-                    
-                    for i=1,numberOfDecimalPlaces do
-                        zeroSuffix = zeroSuffix.."0"
-                    end
-                    
-                    shortenedNumber = shortenedNumber..zeroSuffix
-                    
-                elseif numberOfDecimalPlaces > 1 and shortenedNumber == round(shortenedNumber, 1) then
-                    
-                    for i=1,numberOfDecimalPlaces-1 do
-                        shortenedNumber = shortenedNumber.."0"
-                    end
-                    
-                elseif numberOfDecimalPlaces > 2 and shortenedNumber == round(shortenedNumber, 2) then
-                    
-                    shortenedNumber = shortenedNumber.."0"
-                end
-            end
+            shortenedNumber = string.format("%."..numberOfDecimalPlaces.."f", shortenedNumber)
         end
     end
     
@@ -128,24 +71,7 @@ aura_env.shortenPercent = function(number)
     
     local shortenedNumber = number
     
-    shortenedNumber = round(shortenedNumber, aura_env.config.percentNumOfDecimalPlaces)
-    
-    if aura_env.config.percentNumOfDecimalPlaces > 0 then
-        
-        if shortenedNumber == math.floor(shortenedNumber) then
-            
-            local zeroSuffix = "."
-            
-            for i=1,aura_env.config.percentNumOfDecimalPlaces do
-                zeroSuffix = zeroSuffix.."0"
-            end
-            
-            shortenedNumber = shortenedNumber..zeroSuffix
-            
-        elseif aura_env.config.percentNumOfDecimalPlaces > 1 and shortenedNumber == round(shortenedNumber, 1) then
-            shortenedNumber = shortenedNumber.."0"
-        end
-    end
+    shortenedNumber = string.format("%."..aura_env.config.percentNumOfDecimalPlaces.."f", shortenedNumber)
     
     if number <= 0 then
         shortenedNumber = 0
