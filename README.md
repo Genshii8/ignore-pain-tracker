@@ -1,1 +1,1 @@
-iptracker
+https://wago.io/IgnorePainTracker

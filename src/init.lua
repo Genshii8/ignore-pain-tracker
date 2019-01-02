@@ -1,4 +1,4 @@
--- by Marok (v2.12)
+-- by Marok (v2.1.3)
 
 local numberOfDecimalPlaces = false
 if aura_env.config.numberOfDecimalPlaces == 2 then
