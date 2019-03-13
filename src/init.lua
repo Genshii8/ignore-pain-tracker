@@ -1,4 +1,4 @@
--- by Marok (v2.1.3)
+-- by Marok (v2.1.4)
 
 local numberOfDecimalPlaces = false
 if aura_env.config.numberOfDecimalPlaces == 2 then
@@ -47,11 +47,11 @@ aura_env.shortenNumber = function(number)
     
     if not numberOfDecimalPlaces then
         
-        if number >= 100000 then
+        if shortenedNumber >= 100 then
             shortenedNumber = string.format("%.0f", shortenedNumber)
-        elseif number >= 10000 then
+        elseif shortenedNumber >= 10 then
             shortenedNumber = string.format("%.1f", shortenedNumber)
-        elseif number >= 1000 then
+        elseif shortenedNumber >= 1 then
             shortenedNumber = string.format("%.2f", shortenedNumber)
         end
         
