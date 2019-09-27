@@ -1,13 +1,13 @@
--- by Marok (v2.1.4)
+-- by Marok (v2.2.0)
 
 local numberOfDecimalPlaces = false
-if aura_env.config.numberOfDecimalPlaces == 2 then
+if aura_env.config.textOptions.numberOfDecimalPlaces == 2 then
     numberOfDecimalPlaces = 0
-elseif aura_env.config.numberOfDecimalPlaces == 3 then
+elseif aura_env.config.textOptions.numberOfDecimalPlaces == 3 then
     numberOfDecimalPlaces = 1
-elseif aura_env.config.numberOfDecimalPlaces == 4 then
+elseif aura_env.config.textOptions.numberOfDecimalPlaces == 4 then
     numberOfDecimalPlaces = 2
-elseif aura_env.config.numberOfDecimalPlaces == 5 then
+elseif aura_env.config.textOptions.numberOfDecimalPlaces == 5 then
     numberOfDecimalPlaces = 3
 end
 
@@ -15,15 +15,17 @@ aura_env.setVisuals = function(r,g,b,a, glow)
     
     local region = aura_env.region
     
-    if aura_env.config.colorText1 then
+    if aura_env.config.textOptions.colorText1 then
         region.stacks:SetTextColor(r,g,b,a)
     end
     
-    if aura_env.config.colorText2 then
+    if aura_env.config.textOptions.colorText2 then
         region.text2:SetTextColor(r,g,b,a)
     end
     
-    region:SetGlow(glow)
+    if aura_env.config.iconOptions.glowCondition ~= 1 then
+        region:SetGlow(glow)
+    end
 end
 
 aura_env.shortenNumber = function(number)
@@ -62,7 +64,7 @@ aura_env.shortenNumber = function(number)
         end
     end
     
-    if aura_env.config.dontShortenThousands and (number >= 1000 and number < 10000) then
+    if aura_env.config.textOptions.dontShortenThousands and (number >= 1000 and number < 10000) then
         if wasNegative then
            number = number * -1 
         end
@@ -76,7 +78,7 @@ aura_env.shortenPercent = function(number)
     
     local shortenedNumber = number
     
-    shortenedNumber = string.format("%."..aura_env.config.percentNumOfDecimalPlaces.."f", shortenedNumber)
+    shortenedNumber = string.format("%."..aura_env.config.textOptions.percentNumOfDecimalPlaces.."f", shortenedNumber)
     
     if number <= 0 then
         shortenedNumber = 0
@@ -121,3 +123,5 @@ aura_env.countAzeriteTrait = function(spellId)
     end
     return count
 end
+
+aura_env.hasBloodsport = aura_env.countAzeriteTrait(279172) >= 1

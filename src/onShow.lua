@@ -1,0 +1,1 @@
+aura_env.hasBloodsport = aura_env.countAzeriteTrait(279172) >= 1
