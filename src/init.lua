@@ -1,5 +1,3 @@
--- by Marok (v2.2.0)
-
 local numberOfDecimalPlaces = false
 if aura_env.config.textOptions.numberOfDecimalPlaces == 2 then
     numberOfDecimalPlaces = 0
@@ -66,7 +64,7 @@ aura_env.shortenNumber = function(number)
     
     if aura_env.config.textOptions.dontShortenThousands and (number >= 1000 and number < 10000) then
         if wasNegative then
-           number = number * -1 
+            number = number * -1 
         end
         return number
     else
