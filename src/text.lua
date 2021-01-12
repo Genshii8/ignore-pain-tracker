@@ -4,33 +4,33 @@ function()
     local curHP = UnitHealth("player")
     local maxHP = UnitHealthMax("player")
     local percHPMissing = (maxHP - curHP) / maxHP
-    local _, _, _, hasNS = GetTalentInfo(4, 2, 1)
-    local NSPerc = hasNS and (1 + percHPMissing) or 1
+    local _, _, _, hasNS = GetTalentInfoByID(22384, 1)
+    local NSPerc = hasNS and (1.4 + (0.6 * percHPMissing)) or 1
     
     local currentIP = select(16, WA_GetUnitBuff("player", 190456)) or 0
     
     local castIP = tonumber((GetSpellDescription(190456):match("%%.+%d"):gsub("%D",""))) * NSPerc or 0
     
-    local IPCap = math.floor(castIP * 1.3)
-    if aura_env.hasBloodsport then
-        IPCap = math.floor(castIP * 1.295)
-    end
+    local IPCap = math.floor(castIP * 2)
     
-    if IPCap - currentIP == -1 or IPCap - currentIP == -2 then
+    if IPCap - currentIP <= -1 and IPCap - currentIP >= -10 then -- fixes bug where calculated cap is sometimes slightly lower than real cap
         IPCap = currentIP
     end
     
     local percentOfCap = currentIP / IPCap * 100
     percentOfCap = aura_env.shortenPercent(percentOfCap)
-    
+
     local additionalAbsorb = IPCap - currentIP
+    if currentIP + castIP <= IPCap then
+        additionalAbsorb = castIP
+    end
     
-    local percentOfMaxHP = currentIP / UnitHealthMax("player") * 100
+    local percentOfMaxHP = currentIP / maxHP * 100
     percentOfMaxHP = aura_env.shortenPercent(percentOfMaxHP)
     
     if aura_env.config.iconOptions.saturateBasedOnRage then
         
-        if UnitPower("player") >= GetSpellPowerCost(190456)[1].cost then
+        if UnitPower("player") >= GetSpellPowerCost(190456)[3].cost then
             aura_env.region:SetDesaturated(false)
         else
             aura_env.region:SetDesaturated(true)
