@@ -1,3 +1,6 @@
+local _, _, _, hasNS = GetTalentInfoByID(22384, 1)
+aura_env.hasNS = hasNS
+
 local numberOfDecimalPlaces = false
 if aura_env.config.textOptions.numberOfDecimalPlaces == 2 then
     numberOfDecimalPlaces = 0
