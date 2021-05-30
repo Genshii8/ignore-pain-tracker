@@ -1,6 +1,3 @@
-local _, _, _, hasNS = GetTalentInfoByID(22384, 1)
-aura_env.hasNS = hasNS
-
 local numberOfDecimalPlaces = false
 if aura_env.config.textOptions.numberOfDecimalPlaces == 2 then
     numberOfDecimalPlaces = 0
@@ -12,7 +9,7 @@ elseif aura_env.config.textOptions.numberOfDecimalPlaces == 5 then
     numberOfDecimalPlaces = 3
 end
 
-aura_env.setVisuals = function(r,g,b,a, glow)
+aura_env.setVisuals = function(r,g,b,a,glow)
     
     local region = aura_env.region
     
@@ -25,7 +22,16 @@ aura_env.setVisuals = function(r,g,b,a, glow)
     end
     
     if aura_env.config.iconOptions.glowCondition ~= 1 then
-        region:SetGlow(glow)
+        
+        if aura_env.config.iconOptions.glowRage and not aura_env.canCastIP then
+            glow = false
+        end
+        
+        if glow then
+            WeakAuras.ShowOverlayGlow(region)
+        else
+            WeakAuras.HideOverlayGlow(region)
+        end
     end
 end
 
@@ -86,4 +92,4 @@ aura_env.shortenPercent = function(number)
     end
     
     return shortenedNumber.."%"
-end
+end 
