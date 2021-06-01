@@ -35,7 +35,7 @@ function()
     
     if aura_env.config.iconOptions.saturateBasedOnRage then
         
-        if canCastIP then
+        if aura_env.canCastIP then
             aura_env.region:SetDesaturated(false)
         else
             aura_env.region:SetDesaturated(true)
