@@ -1,8 +1,10 @@
 function()
     
+    local curHP = UnitHealth("player") or 1
+    local maxHP = UnitHealthMax("player") or 1
+    local rage = UnitPower("player") or 0
+    local IPCost = GetSpellPowerCost(190456)[4] and GetSpellPowerCost(190456)[4].cost or 40
     -- Never Surrender
-    local curHP = UnitHealth("player")
-    local maxHP = UnitHealthMax("player")
     local _, _, _, hasNS = GetTalentInfoByID(22384, 1)
     local NSPerc = hasNS and (1.4 + (0.6 * (1 - curHP / maxHP))) or 1
     
@@ -31,7 +33,7 @@ function()
     local percentOfMaxHP = currentIP / maxHP * 100
     percentOfMaxHP = aura_env.shortenPercent(percentOfMaxHP)
     
-    aura_env.canCastIP = UnitPower("player") >= GetSpellPowerCost(190456)[4].cost
+    aura_env.canCastIP = rage >= IPCost
     
     if aura_env.config.iconOptions.saturateBasedOnRage then
         
