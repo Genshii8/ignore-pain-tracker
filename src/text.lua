@@ -1,29 +1,21 @@
 function()
-    
     local curHP = UnitHealth("player") or 1
     local maxHP = UnitHealthMax("player") or 1
     local rage = UnitPower("player") or 0
-    local IPCost = GetSpellPowerCost(190456)[4] and GetSpellPowerCost(190456)[4].cost or 40
+    local IPCost = GetSpellPowerCost(190456)[2] and GetSpellPowerCost(190456)[2].cost or 35
     -- Never Surrender
     local _, _, _, hasNS = GetTalentInfoByID(22384, 1)
     local NSPerc = hasNS and (1.4 + (0.6 * (1 - curHP / maxHP))) or 1
     
+    local ipApCoeff = 4.55
+    local effectiveAttackPower = PlayerEffectiveAttackPower() or 1
+    local versatilityMulti = (1 + GetCombatRatingBonus(CR_VERSATILITY_DAMAGE_DONE) / 100) or 1
+    
+    local castIP = aura_env.round(ipApCoeff * effectiveAttackPower * versatilityMulti * NSPerc)
+    
     local currentIP = select(16, WA_GetUnitBuff("player", 190456)) or 0
     
-    local descriptionAmount = GetSpellDescription(190456):match("%%.+%d")
-    -- On game restart, the returned description is sometimes an empty
-    -- string, so the match is 'nil'.  When it is, use an arbitrary,
-    -- nonzero amount.
-    if descriptionAmount == nil then
-        descriptionAmount = 1
-    else
-        descriptionAmount = descriptionAmount:gsub("%D","")
-        descriptionAmount = tonumber(descriptionAmount)
-    end
-    
-    local castIP = math.floor(descriptionAmount * NSPerc)
-    
-    local IPCap = castIP * 2
+    local IPCap =  aura_env.round(maxHP * 0.3)
     
     local percentOfCap = currentIP / IPCap * 100
     percentOfCap = aura_env.shortenPercent(percentOfCap)

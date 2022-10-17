@@ -93,3 +93,7 @@ aura_env.shortenPercent = function(number)
     
     return shortenedNumber.."%"
 end 
+
+aura_env.round = function(number)
+    return math.floor(number + 0.5)
+end
