@@ -10,7 +10,7 @@ function()
     
     local currentIP = select(16, WA_GetUnitBuff("player", aura_env.IPSpellId)) or 0
     aura_env.isIPUp = currentIP > 0
-    local castIP = tonumber((GetSpellDescription(aura_env.IPSpellId):match("%%.+%d"):gsub("%D", ""))) or 0
+    local castIP = aura_env.getCastIP()
     local IPCap = math.floor(maxHealth * 0.3)
     
     -- maxAdditionalAbsorb can't be less than 0. Even if IPCap becomes lower than currentIP (resulting in a negative value), you won't lose absorb by casting IP.

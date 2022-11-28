@@ -7,6 +7,14 @@ aura_env.text2 = ""
 local numberOfDecimalPlacesOptions = {false, 0, 1, 2, 3}
 local numberOfDecimalPlaces = numberOfDecimalPlacesOptions[aura_env.config.textOptions.numberOfDecimalPlaces]
 
+aura_env.getCastIP = function()
+    local IPDescription = GetSpellDescription(aura_env.IPSpellId) or ""
+    local castIPString = IPDescription:match("%%.+%d") or ""
+    castIPString = castIPString:gsub("%D", "")
+    local castIP = tonumber(castIPString) or 0
+    return castIP
+end
+
 aura_env.getIPCost = function()
     local cost = 35
     local costTables = GetSpellPowerCost(aura_env.IPSpellId);
